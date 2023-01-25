@@ -1,0 +1,25 @@
+version: '2'
+services:
+  cassandra:
+    container_name: cassandra_$uid
+    image: cassandra:4.0
+    ports:
+      - 9042:9042
+    volumes:
+      - "../.test_mycql-data/db:/var/lib/cassandra"
+    environment:
+      - CASSANDRA_CLUSTER_NAME=cloudinfra
+
+  mockServer:
+    container_name: mockServer_$uid
+    image: mockserver/mockserver:latest
+    ports:
+      - 1080:1080
+    environment:
+      MOCKSERVER_WATCH_INITIALIZATION_JSON: "true"
+      MOCKSERVER_PROPERTY_FILE: "/config/mockserver.properties"
+      MOCKSERVER_INITIALIZATION_JSON_PATH: "/config/initializerJson.json"
+    volumes:
+      - type: bind
+        source: .
+        target: /config
