@@ -2,25 +2,26 @@ package main
 
 import (
 	"context"
-	"github.com/stretchr/testify/assert"
-	tc "github.com/testcontainers/testcontainers-go"
 	"strconv"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	tccompose "github.com/testcontainers/testcontainers-go/modules/compose"
 )
 
 func TestMain(t *testing.T) {
 	uid := strconv.FormatInt(time.Now().UnixMilli(), 10)
 
-	compose, err := tc.NewDockerCompose("./testresources/docker-compose.yml")
+	compose, err := tccompose.NewDockerCompose("./testresources/docker-compose.yml")
 	assert.NoError(t, err, "NewDockerComposeAPI()")
 
 	t.Cleanup(func() {
-		assert.NoError(t, compose.Down(context.Background(), tc.RemoveOrphans(true), tc.RemoveImagesLocal), "compose.Down()")
+		assert.NoError(t, compose.Down(context.Background(), tccompose.RemoveOrphans(true), tccompose.RemoveImagesLocal), "compose.Down()")
 	})
 	ctx, cancel := context.WithCancel(context.Background())
 	t.Cleanup(cancel)
 
-	err = compose.WithEnv(map[string]string{"uid": uid}).Up(ctx, tc.Wait(true))
+	err = compose.WithEnv(map[string]string{"uid": uid}).Up(ctx, tccompose.Wait(true))
 	assert.NoError(t, err, "compose.Up()")
 }
