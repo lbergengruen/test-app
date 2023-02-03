@@ -10,30 +10,8 @@ import (
 	"time"
 )
 
-type ConvertibleBoolean bool
-
-func cleanJson(data []byte) []byte {
-	asString := string(data)
-	asString = strings.Replace(asString, "\"expirationDate\": \"none\"", "\"expirationDate\": null", -1)
-	asString = strings.Replace(asString, "\"expirationDate\": \"\"", "\"expirationDate\": null", -1)
-	asString = strings.Replace(asString, "\"disclaimerDeviceV2\": \"\"", "\"disclaimerDeviceV2\": []", -1)
-	asString = strings.Replace(asString, "\"left\": \"189\"", "\"left\": 189", -1)
-	asString = strings.Replace(asString, "\"width\": \"1166\"", "\"width\": 1166", -1)
-	asString = strings.Replace(asString, "\"height\": \"275\"", "\"height\": 275", -1)
-	asString = strings.Replace(asString, "\"false\"", "false", -1)
-	asString = strings.Replace(asString, "\"true\"", "true", -1)
-	//asString = strings.Replace(asString, "\"pageId\": \"{\\n\\\"\\\"ad\\\"\\\": {\\n\\\"\\\"AdID\\\"\\\": \\\"\\\"138305732180\\\"\\\",\\n\\\"\\\"LineID\\\"\\\": \\\"\\\"0\\\"\\\",\\n\\\"\\\"AdvertiserID\\\"\\\": \\\"\\\"0\\\"\\\",\\n\\\"\\\"HDBannerURL\\\"\\\": \\\"\\\"\\\"\\\",\\n\\\"\\\"FHDBannerURL\\\"\\\": \\\"\\\"https://tpc.googlesyndication.com/pagead/imgad?id=CICAgKCXzPe7KhABGAEyCIfKdyRcV4rX\\\"\\\",\\n\\\"\\\"SDBannerURL\\\"\\\": \\\"\\\"\\\"\\\",\\n\\\"\\\"clickAction\\\"\\\": \\\"\\\"DaVinci\\\"\\\",\\n\\\"\\\"clickID\\\"\\\": \\\"\\\"0\\\"\\\",\\n\\\"\\\"clickParams\\\"\\\": \\\"\\\"contentid=rpes-soundbar-marpromo2ndtarget-en-current;mediatype=page;smtptriggerid=31719;offerid=c1f8d563bfd301b5d4373137aba7bc1b\\\"\\\",\\n\\\"\\\"avsource\\\"\\\": \\\"\\\"\\\"\\\",\\n\\\"\\\"clickURL\\\"\\\": \\\"\\\"https://adclick.g.doubleclick.net/pcs/click%253Fxai%253DAKAOjstIStjsdBOIX8zdvqZmO6QUT5Xl9MASHu_x_c9WdOJTxAsLw1rkSHIU5GeJwkrNQU-QqrLCOypuRK0a6vvxAfgu7tWQERqdPaRDwjTXwxr_j7kEm1cAJ-2FAVrRw15po-j2Htfwz3a93AwSCGl4xMCeg2CwH9mU5-ngx2judwGeR9ccbdK258qd6Sef%2526sig%253DCg0ArKJSzCluG4GPzhbPEAE%2526urlfix%253D1%2526adurl%253D\\\"\\\",\\n\\\"\\\"ImpressionURL\\\"\\\": \\\"\\\"\\\"\\\",\\n\\\"\\\"installURL\\\"\\\": \\\"\\\"https://pubads.g.doubleclick.net/gampad/adx?sz=1x1&iu=/82114269/install_tracking&c=1557701928&dpt=1&d_imp=1&d_imp_hdr=1&t=lineitemid%253D0%2526creativeid%253D138305732180%2526adguid%253D\\\"\\\",\\n\\\"\\\"playbackURL\\\"\\\": \\\"\\\"\\\"\\\",\\n\\\"\\\"ThirdPartyImpressions\\\"\\\": \\\"\\\"https://ravm.tv/pixel/display/v1?meType=0&evType=0&adv_id=0&cID=0&plID=0&crID=138305732180&sw_version=&dev_model=&ott_id=&ip=&adguid=&last_channel=&bnr_loc=&locale=&is_lat=&country_code=&trc_version=&trc_channel_version=&grandcentral_version=&davinci_version=&ad_srv=&libversion=&platform=&app=&clientversion=&trc_genre_row=&trc_category_id=&abrejectcount=&guest_mode=&theme=&providerproductids=&adunitpath=/82114269&adunitID=81114389&width=350&height=490&screensaver=&ria_adid=&ria_altid=\\\"\\\",\\n\\\"\\\"ThirdPartyClicks\\\"\\\":\\\"\\\"\\\"\\\",\\n\\\"\\\"refreshinterval\\\"\\\":0,\\n\\\"\\\"refreshtime\\\"\\\":0,\\n\\\"\\\"HDBackgroundImageURL\\\"\\\": \\\"\\\"\\\"\\\",\\n\\\"\\\"FHDBackgroundImageURL\\\"\\\": \\\"\\\"\\\"\\\",\\n\\\"\\\"SDBackgroundImageURL\\\"\\\": \\\"\\\"\\\"\\\"\\n}\\n}\",",
-	//	"\"pageId\": \"{\\\"ad\\\": {\\\"AdID\\\": \\\"138305732180\\\",\\\"LineID\\\": \\\"0\\\",\\\"AdvertiserID\\\": \\\"0\\\",\\\"HDBannerURL\\\": \\\"\\\",\\\"FHDBannerURL\\\": \\\"https://tpc.googlesyndication.com/pagead/imgad?id=CICAgKCXzPe7KhABGAEyCIfKdyRcV4rX\\\",\\\"SDBannerURL\\\": \\\"\\\",\\\"clickAction\\\": \\\"DaVinci\\\",\\\"clickID\\\": \\\"0\\\",\\\"clickParams\\\": \\\"contentid=rpes-soundbar-marpromo2ndtarget-en-current;mediatype=page;smtptriggerid=31719;offerid=c1f8d563bfd301b5d4373137aba7bc1b\\\",\\\"avsource\\\": \\\"\\\",\\\"clickURL\\\": \\\"https://adclick.g.doubleclick.net/pcs/click%253Fxai%253DAKAOjstIStjsdBOIX8zdvqZmO6QUT5Xl9MASHu_x_c9WdOJTxAsLw1rkSHIU5GeJwkrNQU-QqrLCOypuRK0a6vvxAfgu7tWQERqdPaRDwjTXwxr_j7kEm1cAJ-2FAVrRw15po-j2Htfwz3a93AwSCGl4xMCeg2CwH9mU5-ngx2judwGeR9ccbdK258qd6Sef%2526sig%253DCg0ArKJSzCluG4GPzhbPEAE%2526urlfix%253D1%2526adurl%253D\\\",\\\"ImpressionURL\\\": \\\"\\\",\\\"installURL\\\": \\\"https://pubads.g.doubleclick.net/gampad/adx?sz=1x1&iu=/82114269/install_tracking&c=1557701928&dpt=1&d_imp=1&d_imp_hdr=1&t=lineitemid%253D0%2526creativeid%253D138305732180%2526adguid%253D\\\",\\\"playbackURL\\\": \\\"\\\",\\\"ThirdPartyImpressions\\\": \\\"https://ravm.tv/pixel/display/v1?meType=0&evType=0&adv_id=0&cID=0&plID=0&crID=138305732180&sw_version=&dev_model=&ott_id=&ip=&adguid=&last_channel=&bnr_loc=&locale=&is_lat=&country_code=&trc_version=&trc_channel_version=&grandcentral_version=&davinci_version=&ad_srv=&libversion=&platform=&app=&clientversion=&trc_genre_row=&trc_category_id=&abrejectcount=&guest_mode=&theme=&providerproductids=&adunitpath=/82114269&adunitID=81114389&width=350&height=490&screensaver=&ria_adid=&ria_altid=\\\",\\\"ThirdPartyClicks\\\":\\\"\\\",\\\"refreshinterval\\\":0,\\\"refreshtime\\\":0,\\\"HDBackgroundImageURL\\\": \\\"\\\",\\\"FHDBackgroundImageURL\\\": \\\"\\\",\\\"SDBackgroundImageURL\\\": \\\"\\\"}}\",",
-	//	-1)
-	//asString = strings.Replace(asString, "\\\"smtptriggerid=3940", "smtptriggerid=3940", -1)
-	asString = strings.Replace(asString, "[]", "[null]", -1)
-
-	return []byte(asString)
-}
-
-func main() {
-	// Request Get Offers from Wonka
-	resp, err := http.Get("https://wonka.web.roku.com/api/v1/offers?fetchAllOffers=true")
+func GetWonkaOffers(url string) Response {
+	resp, err := http.Get(url)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -49,14 +27,39 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	return r
+}
+
+func cleanJson(data []byte) []byte {
+	asString := string(data)
+	asString = strings.Replace(asString, "\"expirationDate\": \"none\"", "\"expirationDate\": null", -1)
+	asString = strings.Replace(asString, "\"expirationDate\": \"\"", "\"expirationDate\": null", -1)
+	asString = strings.Replace(asString, "\"disclaimerDeviceV2\": \"\"", "\"disclaimerDeviceV2\": []", -1)
+	asString = strings.Replace(asString, "\"left\": \"189\"", "\"left\": 189", -1)
+	asString = strings.Replace(asString, "\"width\": \"1166\"", "\"width\": 1166", -1)
+	asString = strings.Replace(asString, "\"height\": \"275\"", "\"height\": 275", -1)
+	asString = strings.Replace(asString, "\"false\"", "false", -1)
+	asString = strings.Replace(asString, "\"true\"", "true", -1)
+	asString = strings.Replace(asString, "\"background\": \"none\"", "\"background\": {}", -1)
+	//asString = strings.Replace(asString, "\"pageId\": \"{\\n\\\"\\\"ad\\\"\\\": {\\n\\\"\\\"AdID\\\"\\\": \\\"\\\"138305732180\\\"\\\",\\n\\\"\\\"LineID\\\"\\\": \\\"\\\"0\\\"\\\",\\n\\\"\\\"AdvertiserID\\\"\\\": \\\"\\\"0\\\"\\\",\\n\\\"\\\"HDBannerURL\\\"\\\": \\\"\\\"\\\"\\\",\\n\\\"\\\"FHDBannerURL\\\"\\\": \\\"\\\"https://tpc.googlesyndication.com/pagead/imgad?id=CICAgKCXzPe7KhABGAEyCIfKdyRcV4rX\\\"\\\",\\n\\\"\\\"SDBannerURL\\\"\\\": \\\"\\\"\\\"\\\",\\n\\\"\\\"clickAction\\\"\\\": \\\"\\\"DaVinci\\\"\\\",\\n\\\"\\\"clickID\\\"\\\": \\\"\\\"0\\\"\\\",\\n\\\"\\\"clickParams\\\"\\\": \\\"\\\"contentid=rpes-soundbar-marpromo2ndtarget-en-current;mediatype=page;smtptriggerid=31719;offerid=c1f8d563bfd301b5d4373137aba7bc1b\\\"\\\",\\n\\\"\\\"avsource\\\"\\\": \\\"\\\"\\\"\\\",\\n\\\"\\\"clickURL\\\"\\\": \\\"\\\"https://adclick.g.doubleclick.net/pcs/click%253Fxai%253DAKAOjstIStjsdBOIX8zdvqZmO6QUT5Xl9MASHu_x_c9WdOJTxAsLw1rkSHIU5GeJwkrNQU-QqrLCOypuRK0a6vvxAfgu7tWQERqdPaRDwjTXwxr_j7kEm1cAJ-2FAVrRw15po-j2Htfwz3a93AwSCGl4xMCeg2CwH9mU5-ngx2judwGeR9ccbdK258qd6Sef%2526sig%253DCg0ArKJSzCluG4GPzhbPEAE%2526urlfix%253D1%2526adurl%253D\\\"\\\",\\n\\\"\\\"ImpressionURL\\\"\\\": \\\"\\\"\\\"\\\",\\n\\\"\\\"installURL\\\"\\\": \\\"\\\"https://pubads.g.doubleclick.net/gampad/adx?sz=1x1&iu=/82114269/install_tracking&c=1557701928&dpt=1&d_imp=1&d_imp_hdr=1&t=lineitemid%253D0%2526creativeid%253D138305732180%2526adguid%253D\\\"\\\",\\n\\\"\\\"playbackURL\\\"\\\": \\\"\\\"\\\"\\\",\\n\\\"\\\"ThirdPartyImpressions\\\"\\\": \\\"\\\"https://ravm.tv/pixel/display/v1?meType=0&evType=0&adv_id=0&cID=0&plID=0&crID=138305732180&sw_version=&dev_model=&ott_id=&ip=&adguid=&last_channel=&bnr_loc=&locale=&is_lat=&country_code=&trc_version=&trc_channel_version=&grandcentral_version=&davinci_version=&ad_srv=&libversion=&platform=&app=&clientversion=&trc_genre_row=&trc_category_id=&abrejectcount=&guest_mode=&theme=&providerproductids=&adunitpath=/82114269&adunitID=81114389&width=350&height=490&screensaver=&ria_adid=&ria_altid=\\\"\\\",\\n\\\"\\\"ThirdPartyClicks\\\"\\\":\\\"\\\"\\\"\\\",\\n\\\"\\\"refreshinterval\\\"\\\":0,\\n\\\"\\\"refreshtime\\\"\\\":0,\\n\\\"\\\"HDBackgroundImageURL\\\"\\\": \\\"\\\"\\\"\\\",\\n\\\"\\\"FHDBackgroundImageURL\\\"\\\": \\\"\\\"\\\"\\\",\\n\\\"\\\"SDBackgroundImageURL\\\"\\\": \\\"\\\"\\\"\\\"\\n}\\n}\",",
+	//	"\"pageId\": \"{\\\"ad\\\": {\\\"AdID\\\": \\\"138305732180\\\",\\\"LineID\\\": \\\"0\\\",\\\"AdvertiserID\\\": \\\"0\\\",\\\"HDBannerURL\\\": \\\"\\\",\\\"FHDBannerURL\\\": \\\"https://tpc.googlesyndication.com/pagead/imgad?id=CICAgKCXzPe7KhABGAEyCIfKdyRcV4rX\\\",\\\"SDBannerURL\\\": \\\"\\\",\\\"clickAction\\\": \\\"DaVinci\\\",\\\"clickID\\\": \\\"0\\\",\\\"clickParams\\\": \\\"contentid=rpes-soundbar-marpromo2ndtarget-en-current;mediatype=page;smtptriggerid=31719;offerid=c1f8d563bfd301b5d4373137aba7bc1b\\\",\\\"avsource\\\": \\\"\\\",\\\"clickURL\\\": \\\"https://adclick.g.doubleclick.net/pcs/click%253Fxai%253DAKAOjstIStjsdBOIX8zdvqZmO6QUT5Xl9MASHu_x_c9WdOJTxAsLw1rkSHIU5GeJwkrNQU-QqrLCOypuRK0a6vvxAfgu7tWQERqdPaRDwjTXwxr_j7kEm1cAJ-2FAVrRw15po-j2Htfwz3a93AwSCGl4xMCeg2CwH9mU5-ngx2judwGeR9ccbdK258qd6Sef%2526sig%253DCg0ArKJSzCluG4GPzhbPEAE%2526urlfix%253D1%2526adurl%253D\\\",\\\"ImpressionURL\\\": \\\"\\\",\\\"installURL\\\": \\\"https://pubads.g.doubleclick.net/gampad/adx?sz=1x1&iu=/82114269/install_tracking&c=1557701928&dpt=1&d_imp=1&d_imp_hdr=1&t=lineitemid%253D0%2526creativeid%253D138305732180%2526adguid%253D\\\",\\\"playbackURL\\\": \\\"\\\",\\\"ThirdPartyImpressions\\\": \\\"https://ravm.tv/pixel/display/v1?meType=0&evType=0&adv_id=0&cID=0&plID=0&crID=138305732180&sw_version=&dev_model=&ott_id=&ip=&adguid=&last_channel=&bnr_loc=&locale=&is_lat=&country_code=&trc_version=&trc_channel_version=&grandcentral_version=&davinci_version=&ad_srv=&libversion=&platform=&app=&clientversion=&trc_genre_row=&trc_category_id=&abrejectcount=&guest_mode=&theme=&providerproductids=&adunitpath=/82114269&adunitID=81114389&width=350&height=490&screensaver=&ria_adid=&ria_altid=\\\",\\\"ThirdPartyClicks\\\":\\\"\\\",\\\"refreshinterval\\\":0,\\\"refreshtime\\\":0,\\\"HDBackgroundImageURL\\\": \\\"\\\",\\\"FHDBackgroundImageURL\\\": \\\"\\\",\\\"SDBackgroundImageURL\\\": \\\"\\\"}}\",",
+	//	-1)
+	//asString = strings.Replace(asString, "\\\"smtptriggerid=3940", "smtptriggerid=3940", -1)
+
+	return []byte(asString)
+}
+
+func main() {
+	// Request Get Offers from Wonka
+	r := GetWonkaOffers("https://wonka.web.roku.com/api/v1/offers?fetchAllOffers=true")
 
 	// Map into Wonka's offers into Offersvs' offers
 	var offers []OfferDetail
 	for _, item := range r.Items {
 		fmt.Println(item.Id)
-		var _PLACEHOLDER_STRING_ *string
-		var _PLACEHOLDER_BOOL_ *bool
-		var _PLACEHOLDER_INT_ *int
+		//var _PLACEHOLDER_STRING_ *string
+		//var _PLACEHOLDER_BOOL_ *bool
+		//var _PLACEHOLDER_INT_ *int
 		//var _PLACEHOLDER_TIME_ *time.Time
 		var _PLACEHOLDER_ITEMVALUE_ *ItemValue
 
@@ -70,6 +73,7 @@ func main() {
 		//}
 
 		var detailsImage, slideshow, disclaimerDeviceV2, hdImage, compatibility, upsell, microsite string
+		var sortWeight bool
 		if len(item.Localizations.EnUs.Microsite.Assets) == 1 {
 			detailsImage = item.Localizations.EnUs.Microsite.Assets[0].DetailsImage
 			hdImage = item.Localizations.EnUs.Microsite.Assets[0].HdImage
@@ -92,11 +96,15 @@ func main() {
 		}
 
 		if item.Localizations.EnUs.Microsite.IsCloudSDKEnabled {
-			byteMicrosite, _ := json.Marshal(item.Localizations.EnUs.Microsite)
+			byteMicrosite, err := json.Marshal(item.Localizations.EnUs.Microsite)
 			if err != nil {
 				log.Println(err)
 			}
 			microsite = string(byteMicrosite)
+		}
+
+		if item.Localizations.EnUs.Microsite.SortWeight == 1 {
+			sortWeight = true
 		}
 
 		expirationDate, _ := time.Parse("DD/MM/YYYY", item.Localizations.EnUs.ExpirationDate)
@@ -133,8 +141,8 @@ func main() {
 			// VersionID:                 _PLACEHOLDER_STRING_, // Not used in Wonka
 			LegalDisclaimer:           &item.Localizations.EnUs.Disclaimer,
 			VanityURL:                 &item.Localizations.EnUs.VanityUrl,
-			OfferDisplayOnTop:         _PLACEHOLDER_BOOL_,
-			OfferDisplayOnUpgradePage: _PLACEHOLDER_BOOL_,
+			OfferDisplayOnTop:         &sortWeight,
+			OfferDisplayOnUpgradePage: &sortWeight,
 			Notification:              &item.Localizations.EnUs.Microsite.Notification,
 			DetailsBulletFooter:       &item.Localizations.EnUs.BulletFooter1,
 			DetailsBulletFooter1:      &item.Localizations.EnUs.BulletFooter2,
@@ -150,57 +158,66 @@ func main() {
 			DetailModalImage:          &detailsImage,
 		}}
 
-		hudOfferDetails := []*HudOffer{{
-			//HudOfferID:  _PLACEHOLDER_STRING_, // Created by Offersvs API
-			OfferID:     &item.Id,
-			ContextType: _PLACEHOLDER_STRING_,
-			HudType:     _PLACEHOLDER_STRING_,
-			ContextData: _PLACEHOLDER_STRING_,
-			CheckedItem: &CheckedItem{
-				CaptionsAreOn:              _PLACEHOLDER_ITEMVALUE_,
-				HasPairedSpeakers:          _PLACEHOLDER_ITEMVALUE_,
-				HasConnectedSoundbar:       _PLACEHOLDER_ITEMVALUE_,
-				HasPairedSubwoofer:         _PLACEHOLDER_ITEMVALUE_,
-				Is4kDevice:                 _PLACEHOLDER_ITEMVALUE_,
-				IsConnectedToRokuTv:        _PLACEHOLDER_ITEMVALUE_,
-				IsRokuTv:                   _PLACEHOLDER_ITEMVALUE_,
-				IsSoundbar:                 _PLACEHOLDER_ITEMVALUE_,
-				MobileAppUsedRecently:      _PLACEHOLDER_ITEMVALUE_,
-				MadeFrequentTextSearches:   _PLACEHOLDER_ITEMVALUE_,
-				HasVoiceRemote:             _PLACEHOLDER_ITEMVALUE_,
-				HasVoiceRemotePro:          _PLACEHOLDER_ITEMVALUE_,
-				UsedPhysicalRemoteRecently: _PLACEHOLDER_ITEMVALUE_,
-				MadeFrequentVolumeChanges:  _PLACEHOLDER_ITEMVALUE_,
-				HadConstantHighVolume:      _PLACEHOLDER_ITEMVALUE_,
-				IsConnectedTo4kTv:          _PLACEHOLDER_ITEMVALUE_,
-				IsFrequentlyUsedApp:        _PLACEHOLDER_ITEMVALUE_,
-				HasRemoteWithAppButton:     _PLACEHOLDER_ITEMVALUE_,
-				HasPoorWifi:                _PLACEHOLDER_ITEMVALUE_,
-				HadFrequentRebuffers:       _PLACEHOLDER_ITEMVALUE_,
-				RebufferHudShownRecently:   _PLACEHOLDER_ITEMVALUE_,
-				RebufferHudIgnoredRecently: _PLACEHOLDER_ITEMVALUE_,
-				SuppressRebufferHud:        _PLACEHOLDER_ITEMVALUE_,
-				OnlyTargetedDevices:        _PLACEHOLDER_ITEMVALUE_,
-			},
-			Assets: &Assets{
-				Background: &Background{
-					FhdURL: _PLACEHOLDER_STRING_,
-					HdURL:  _PLACEHOLDER_STRING_,
+		var hudOfferDetails []*HudOffer
+		for _, hudOffer := range item.MiniHuds.EnUs {
+
+			var frames []*Frame
+			for _, frame := range hudOffer.Assets.Frames {
+				frames = append(frames, &Frame{
+					FhdURL:    &frame.FhdUrl,
+					HdURL:     &frame.HdUrl,
+					Delay:     &frame.Delay,
+					Type:      &frame.Type,
+					Title:     &frame.Title,
+					Subtitle:  &frame.Subtitle,
+					OkCta:     &frame.OkCta,
+					CancelCta: &frame.CancelCta,
+					Footer:    &frame.Footer,
+				})
+			}
+
+			hudOfferDetails = append(hudOfferDetails, &HudOffer{
+				//HudOfferID:  _PLACEHOLDER_STRING_, // Created by Offersvs API
+				OfferID:     &item.Id,
+				ContextType: &hudOffer.Context,
+				HudType:     &hudOffer.Type,
+				ContextData: &hudOffer.ContextData,
+				CheckedItem: &CheckedItem{
+					CaptionsAreOn:              _PLACEHOLDER_ITEMVALUE_,
+					HasPairedSpeakers:          _PLACEHOLDER_ITEMVALUE_,
+					HasConnectedSoundbar:       _PLACEHOLDER_ITEMVALUE_,
+					HasPairedSubwoofer:         _PLACEHOLDER_ITEMVALUE_,
+					Is4kDevice:                 _PLACEHOLDER_ITEMVALUE_,
+					IsConnectedToRokuTv:        _PLACEHOLDER_ITEMVALUE_,
+					IsRokuTv:                   _PLACEHOLDER_ITEMVALUE_,
+					IsSoundbar:                 _PLACEHOLDER_ITEMVALUE_,
+					MobileAppUsedRecently:      _PLACEHOLDER_ITEMVALUE_,
+					MadeFrequentTextSearches:   _PLACEHOLDER_ITEMVALUE_,
+					HasVoiceRemote:             _PLACEHOLDER_ITEMVALUE_,
+					HasVoiceRemotePro:          _PLACEHOLDER_ITEMVALUE_,
+					UsedPhysicalRemoteRecently: _PLACEHOLDER_ITEMVALUE_,
+					MadeFrequentVolumeChanges:  _PLACEHOLDER_ITEMVALUE_,
+					HadConstantHighVolume:      _PLACEHOLDER_ITEMVALUE_,
+					IsConnectedTo4kTv:          _PLACEHOLDER_ITEMVALUE_,
+					IsFrequentlyUsedApp:        _PLACEHOLDER_ITEMVALUE_,
+					HasRemoteWithAppButton:     _PLACEHOLDER_ITEMVALUE_,
+					HasPoorWifi:                _PLACEHOLDER_ITEMVALUE_,
+					HadFrequentRebuffers:       _PLACEHOLDER_ITEMVALUE_,
+					RebufferHudShownRecently:   _PLACEHOLDER_ITEMVALUE_,
+					RebufferHudIgnoredRecently: _PLACEHOLDER_ITEMVALUE_,
+					SuppressRebufferHud:        _PLACEHOLDER_ITEMVALUE_,
+					OnlyTargetedDevices:        _PLACEHOLDER_ITEMVALUE_,
 				},
-				Duration: _PLACEHOLDER_INT_,
-				Frames: []*Frame{{
-					FhdURL:    _PLACEHOLDER_STRING_,
-					HdURL:     _PLACEHOLDER_STRING_,
-					Delay:     _PLACEHOLDER_INT_,
-					Type:      _PLACEHOLDER_STRING_,
-					Title:     _PLACEHOLDER_STRING_,
-					Subtitle:  _PLACEHOLDER_STRING_,
-					OkCta:     _PLACEHOLDER_STRING_,
-					CancelCta: _PLACEHOLDER_STRING_,
-					Footer:    _PLACEHOLDER_STRING_,
-				}},
-			},
-		}}
+				Assets: &Assets{
+					Background: &Background{
+						FhdURL: &hudOffer.Assets.Background.FhdUrl,
+						HdURL:  &hudOffer.Assets.Background.HdUrl,
+					},
+					Duration: &hudOffer.Assets.Duration,
+					Frames:   frames,
+				},
+			})
+		}
 
 		offerDetail := OfferDetail{
 			OfferID:         &item.Id,
@@ -208,14 +225,14 @@ func main() {
 			OfferModel:      &item.PromotedDeviceModel,
 			OfferDeviceName: &item.Localizations.EnUs.Header,
 			//AdBannerFlag:                      _PLACEHOLDER_BOOL_, // No prop in Wonka for indicating it's an AdBanner
-			IsFreeCheckoutEnabled:      &item.Localizations.EnUs.FreeCheckout,
-			TargetedDevice:             &item.TargetedDevice,
-			TargetedBlacklistModels:    &item.TargetedDeviceBlacklistHw,
-			IsDedupeEnabled:            &item.IgnoreDedupeByModel,
-			IsFilteringByAbTestEnabled: &item.IsDmpQualified,
-			//IsFilteringByCompatibilityEnabled: _PLACEHOLDER_BOOL_, //Never used in Wonka
-			//IsFilteringByMlEnabled:            _PLACEHOLDER_BOOL_, //Never used
-			Compatibility: &compatibility,
+			IsFreeCheckoutEnabled:             &item.Localizations.EnUs.FreeCheckout,
+			TargetedDevice:                    &item.TargetedDevice,
+			TargetedBlacklistModels:           &item.TargetedDeviceBlacklistHw,
+			IsDedupeEnabled:                   &item.IgnoreDedupeByModel,
+			IsFilteringByAbTestEnabled:        &item.IsDmpQualified,
+			IsFilteringByCompatibilityEnabled: &item.IsCompatibilityFilterable, //Never used in Wonka
+			IsFilteringByMlEnabled:            &item.IsMLfilterable,            //Never used
+			Compatibility:                     &compatibility,
 			//Notes:                             _PLACEHOLDER_STRING_, // Stored on Campaign Object, should be stored on CMS
 			Discount:       &item.Localizations.EnUs.Discount,
 			CouponRule:     &item.Localizations.EnUs.CouponRule,
