@@ -34,37 +34,65 @@ type PageId struct {
 	} `json:"ad"`
 }
 
+type MiniHuds struct {
+	EnUs []struct {
+		Context     string   `json:"context"`
+		Conditions  []string `json:"conditions"`
+		ContextData string   `json:"contextData"`
+		Assets      struct {
+			Duration int `json:"duration"`
+			Frames   []struct {
+				Type      string `json:"type"`
+				FhdUrl    string `json:"fhdUrl,omitempty"`
+				HdUrl     string `json:"hdUrl,omitempty"`
+				Delay     int    `json:"delay"`
+				Title     string `json:"title,omitempty"`
+				Subtitle  string `json:"subtitle,omitempty"`
+				OkCta     string `json:"okCta,omitempty"`
+				CancelCta string `json:"cancelCta,omitempty"`
+				Footer    string `json:"footer,omitempty"`
+			} `json:"frames"`
+			Background struct {
+				FhdUrl string `json:"fhdUrl"`
+				HdUrl  string `json:"hdUrl"`
+			} `json:"background,omitempty"`
+		} `json:"assets"`
+		Type    string `json:"type"`
+		OfferId string `json:"offerId"`
+		Id      string `json:"id"`
+		Version int    `json:"version"`
+	} `json:"en-us"`
+}
+
 type Response struct {
 	Items []struct {
-		Id                   string   `json:"id"`
-		Name                 string   `json:"name"`
-		CampaignClass        string   `json:"campaignClass"`
-		Active               bool     `json:"active"`
-		PageId               string   `json:"pageId"`
-		IsDmpQualified       bool     `json:"isDmpQualified"`
-		TargetedDevice       string   `json:"targetedDevice"`
-		TargetedDeviceModel  string   `json:"targetedDeviceModel"`
-		PromotedDeviceModel  string   `json:"promotedDeviceModel"`
-		IgnoreDedupeByModel  bool     `json:"ignoreDedupeByModel"`
-		Restriction          string   `json:"restriction"`
-		StartDateUtc         string   `json:"startDateUtc"`
-		EndDateUtc           string   `json:"endDateUtc"`
-		ClientTypeArray      []string `json:"clientTypeArray"`
-		Compatibility        []string `json:"compatibility"`
-		OfferType            string   `json:"offerType"`
-		StoreFront           string   `json:"storeFront"`
-		TargetedDeviceModels string   `json:"targetedDeviceModels"`
-		SegmentId            string   `json:"segmentId"`
-		CampaignId           string   `json:"campaignId"`
-
-		FreeCheckout         string    `json:"freeCheckout"`
+		Id                   string    `json:"id"`
+		Name                 string    `json:"name"`
+		CampaignClass        string    `json:"campaignClass"`
+		Active               bool      `json:"active"`
+		PageId               string    `json:"pageId"`
+		IsDmpQualified       bool      `json:"isDmpQualified"`
+		TargetedDevice       string    `json:"targetedDevice"`
+		TargetedDeviceModel  string    `json:"targetedDeviceModel"`
+		PromotedDeviceModel  string    `json:"promotedDeviceModel"`
+		IgnoreDedupeByModel  bool      `json:"ignoreDedupeByModel"`
+		Restriction          string    `json:"restriction"`
+		StartDateUtc         string    `json:"startDateUtc"`
+		EndDateUtc           string    `json:"endDateUtc"`
+		ClientTypeArray      []string  `json:"clientTypeArray"`
+		Compatibility        []string  `json:"compatibility"`
+		OfferType            string    `json:"offerType"`
+		StoreFront           string    `json:"storeFront"`
+		TargetedDeviceModels string    `json:"targetedDeviceModels"`
+		SegmentId            string    `json:"segmentId"`
+		CampaignId           string    `json:"campaignId"`
+		FreeCheckout         bool      `json:"freeCheckout"`
 		EndDateUtcReadable   string    `json:"endDateUtcReadable"`
 		StartDateUtcReadable string    `json:"startDateUtcReadable"`
 		PauseDateUtc         time.Time `json:"pauseDateUtc"`
 		ResumeDateUtc        time.Time `json:"resumeDateUtc"`
-
-		CampaignName  string `json:"campaignName"`
-		Localizations struct {
+		CampaignName         string    `json:"campaignName"`
+		Localizations        struct {
 			EnUs struct {
 				Sku                 string   `json:"sku"`
 				Discount            float32  `json:"discount"`
@@ -102,7 +130,27 @@ type Response struct {
 					Title    string `json:"title"`
 					VideoUrl string `json:"videoUrl"`
 					Ui       struct {
-						Slideshow  []string `json:"slideshow"`
+						Slideshow []struct {
+							Id   string `json:"id"`
+							File struct {
+								Width        int    `json:"width"`
+								Height       int    `json:"height"`
+								Type         string `json:"type"`
+								Size         int    `json:"size"`
+								Encoding     string `json:"encoding"`
+								Url          string `json:"url"`
+								Alternatives []struct {
+									Width    int    `json:"width"`
+									Height   int    `json:"height"`
+									Type     string `json:"type"`
+									Size     int    `json:"size"`
+									Encoding string `json:"encoding"`
+									Url      string `json:"url"`
+								} `json:"alternatives"`
+							} `json:"file"`
+							Width  int `json:"width"`
+							Height int `json:"height"`
+						} `json:"slideshow"`
 						Components []struct {
 							Type   string `json:"type"`
 							Name   string `json:"name"`
@@ -138,42 +186,12 @@ type Response struct {
 				} `json:"microsite"`
 			} `json:"en-us"`
 		} `json:"localizations"`
-		MiniHuds struct {
-			EnUs []struct {
-				Context     string   `json:"context"`
-				Conditions  []string `json:"conditions"`
-				ContextData string   `json:"contextData"`
-				Assets      struct {
-					Duration int `json:"duration"`
-					Frames   []struct {
-						Delay     int    `json:"delay"`
-						Type      string `json:"type,omitempty"`
-						FhdUrl    string `json:"fhdUrl,omitempty"`
-						HdUrl     string `json:"hdUrl,omitempty"`
-						Title     string `json:"title,omitempty"`
-						Subtitle  string `json:"subtitle,omitempty"`
-						OkCta     string `json:"okCta,omitempty"`
-						CancelCta string `json:"cancelCta,omitempty"`
-						Footer    string `json:"footer,omitempty"`
-					} `json:"frames"`
-					Background struct {
-						FhdUrl string `json:"fhdUrl"`
-						HdUrl  string `json:"hdUrl"`
-					} `json:"background,omitempty"`
-				} `json:"assets"`
-				Type    string `json:"type"`
-				OfferId string `json:"offerId"`
-				Id      string `json:"id"`
-				Version int    `json:"version"`
-			} `json:"en-us"`
-		} `json:"miniHuds"`
-
-		IsMLfilterable bool `json:"isMLfilterable"`
+		MiniHuds       string `json:"miniHuds"`
+		IsMLfilterable bool   `json:"isMLfilterable"`
 		MiniAds        struct {
 		} `json:"miniAds"`
-		IsCompatibilityFilterable bool   `json:"isCompatibilityFilterable"`
-		ClientType                string `json:"clientType"`
-
+		IsCompatibilityFilterable  bool   `json:"isCompatibilityFilterable"`
+		ClientType                 string `json:"clientType"`
 		TargetedDeviceBlacklistHw  string `json:"targetedDeviceBlacklistHw"`
 		TargetedPlatforms          string `json:"targetedPlatforms"`
 		TargetedPlatformsBlacklist string `json:"targetedPlatformsBlacklist"`
@@ -305,7 +323,7 @@ type CreateFirmwareOfferDetail struct {
 	SlideShow               *string    `json:"slideShow"`
 	MicrositeDescriptions   *string    `json:"micrositeDescriptions"`
 	MicrositeConfigurations *string    `json:"micrositeConfigurations"`
-	MicrositeDisclaimer     *string    `json:"micrositeDisclaimer"`
+	MicrositeDisclaimer     []*string  `json:"micrositeDisclaimer"`
 	IsCloudSdkMicrosite     *bool      `json:"isCloudSdkMicrosite"`
 	CloudSdkSettings        *string    `json:"cloudSdkSettings"`
 	HasBuyNow               *bool      `json:"hasBuyNow"`
@@ -362,11 +380,11 @@ type CreateOfferDetail struct {
 	IsFilteringByAbTestEnabled        *bool      `json:"isFilteringByAbTestEnabled"`
 	IsFilteringByCompatibilityEnabled *bool      `json:"isFilteringByCompatibilityEnabled"`
 	IsFilteringByMlEnabled            *bool      `json:"isFilteringByMlEnabled"`
-	Compatibility                     *string    `json:"compatibility"`
+	Compatibility                     []*string  `json:"compatibility"`
 	Notes                             *string    `json:"notes"`
 	Discount                          *float32   `json:"discount"`
 	CouponRule                        *string    `json:"couponRule"`
-	UpsellItems                       *string    `json:"upsellItems"`
+	UpsellItems                       []*string  `json:"upsellItems"`
 	RedemptionRule                    *string    `json:"redemptionRule"`
 	JiraTicket                        *string    `json:"jiraTicket"`
 	CreatedBy                         *string    `json:"createdBy"`
@@ -410,7 +428,7 @@ type FirmwareOfferDetail struct {
 	SlideShow               *string    `json:"slideShow"`
 	MicrositeDescriptions   *string    `json:"micrositeDescriptions"`
 	MicrositeConfigurations *string    `json:"micrositeConfigurations"`
-	MicrositeDisclaimer     *string    `json:"micrositeDisclaimer"`
+	MicrositeDisclaimer     []*string  `json:"micrositeDisclaimer"`
 	IsCloudSdkMicrosite     *bool      `json:"isCloudSdkMicrosite"`
 	CloudSdkSettings        *string    `json:"cloudSdkSettings"`
 	HasBuyNow               *bool      `json:"hasBuyNow"`
@@ -470,11 +488,11 @@ type OfferDetail struct {
 	IsFilteringByAbTestEnabled        *bool                  `json:"isFilteringByAbTestEnabled"`
 	IsFilteringByCompatibilityEnabled *bool                  `json:"isFilteringByCompatibilityEnabled"`
 	IsFilteringByMlEnabled            *bool                  `json:"isFilteringByMlEnabled"`
-	Compatibility                     *string                `json:"compatibility"`
+	Compatibility                     []*string              `json:"compatibility"`
 	Notes                             *string                `json:"notes"`
 	Discount                          *float32               `json:"discount"`
 	CouponRule                        *string                `json:"couponRule"`
-	UpsellItems                       *string                `json:"upsellItems"`
+	UpsellItems                       []*string              `json:"upsellItems"`
 	RedemptionRule                    *string                `json:"redemptionRule"`
 	JiraTicket                        *string                `json:"jiraTicket"`
 	FirmwareOfferDetail               []*FirmwareOfferDetail `json:"firmwareOfferDetail"`
