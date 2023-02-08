@@ -161,29 +161,29 @@ type Response struct {
 							Text   string `json:"text,omitempty"`
 						} `json:"components"`
 					} `json:"ui"`
-					MicrositeAssets          struct{} `json:"micrositeAssets"`
-					IsCloudSDKEnabled        bool     `json:"isCloudSDKEnabled"`
-					ShippingMsg              string   `json:"shippingMsg"`
-					SortWeight               int      `json:"sortWeight"`
-					LimitedOfferMsg          string   `json:"limitedOfferMsg"`
-					DisplayProductCard       string   `json:"displayProductCard"`
-					Notification             string   `json:"notification"`
-					DeviceProductDescription string   `json:"device_product_description"`
-					FirmwareAssets           struct {
-						Text                  string `json:"text"`
-						HdImage               string `json:"hdImage"`
-						FhdImage              string `json:"fhdImage"`
-						HdBackgroundImageURL  string `json:"hdBackgroundImageURL"`
-						FhdBackgroundImageURL string `json:"fhdBackgroundImageURL"`
-					} `json:"firmwareAssets"`
-					Assets []struct {
-						Type         string `json:"type"`
-						HdImage      string `json:"hdImage"`
-						SdImage      string `json:"sdImage"`
-						DetailsImage string `json:"detailsImage"`
-					} `json:"assets"`
-					Upsell []string `json:"upsell"`
 				} `json:"microsite"`
+				MicrositeAssets          struct{} `json:"micrositeAssets"`
+				IsCloudSDKEnabled        bool     `json:"isCloudSDKEnabled"`
+				ShippingMsg              string   `json:"shippingMsg"`
+				SortWeight               int      `json:"sortWeight"`
+				LimitedOfferMsg          string   `json:"limitedOfferMsg"`
+				DisplayProductCard       bool     `json:"displayProductCard"`
+				Notification             string   `json:"notification"`
+				DeviceProductDescription string   `json:"device_product_description"`
+				FirmwareAssets           struct {
+					Text                  string `json:"text"`
+					HdImage               string `json:"hdImage"`
+					FhdImage              string `json:"fhdImage"`
+					HdBackgroundImageURL  string `json:"hdBackgroundImageURL"`
+					FhdBackgroundImageURL string `json:"fhdBackgroundImageURL"`
+				} `json:"firmwareAssets"`
+				Assets []struct {
+					Type         string `json:"type"`
+					HdImage      string `json:"hdImage"`
+					SdImage      string `json:"sdImage"`
+					DetailsImage string `json:"detailsImage"`
+				} `json:"assets"`
+				Upsell []string `json:"upsell"`
 			} `json:"en-us"`
 		} `json:"localizations"`
 		MiniHuds       string `json:"miniHuds"`

@@ -32,7 +32,7 @@ func GetWonkaOffers(url string) Response {
 
 func cleanJson(data []byte) []byte {
 	asString := string(data)
-	asString = strings.Replace(asString, "\"expirationDate\": \"none\"", "\"expirationDate\": null", -1)
+	asString = strings.Replace(asString, "\"expirationDate\": \"none\"", "\"expirationDate\": \"\"", -1)
 	asString = strings.Replace(asString, "\"expirationDate\": \"\"", "\"expirationDate\": null", -1)
 	asString = strings.Replace(asString, "\"disclaimerDeviceV2\": \"\"", "\"disclaimerDeviceV2\": []", -1)
 	asString = strings.Replace(asString, "\"left\": \"189\"", "\"left\": 189", -1)
@@ -63,10 +63,10 @@ func main() {
 		var upsell, compatibility, disclaimerDeviceV2 []*string
 		var sortWeight bool
 
-		if len(item.Localizations.EnUs.Microsite.Assets) == 1 {
-			detailsImage = item.Localizations.EnUs.Microsite.Assets[0].DetailsImage
-			hdImage = item.Localizations.EnUs.Microsite.Assets[0].HdImage
-		} else if len(item.Localizations.EnUs.Microsite.Assets) > 1 {
+		if len(item.Localizations.EnUs.Assets) == 1 {
+			detailsImage = item.Localizations.EnUs.Assets[0].DetailsImage
+			hdImage = item.Localizations.EnUs.Assets[0].HdImage
+		} else if len(item.Localizations.EnUs.Assets) > 1 {
 			log.Fatalln("More than one! Assets")
 		}
 
@@ -84,36 +84,37 @@ func main() {
 			compatibility = append(compatibility, &object)
 		}
 
-		for _, object := range item.Localizations.EnUs.Microsite.Upsell {
+		for _, object := range item.Localizations.EnUs.Upsell {
 			upsell = append(upsell, &object)
 		}
 
-		if item.Localizations.EnUs.Microsite.IsCloudSDKEnabled {
-			byteMicrosite, err := json.Marshal(item.Localizations.EnUs.Microsite)
-			if err != nil {
-				log.Println(err)
-			}
-			microsite = string(byteMicrosite)
+		byteMicrosite, err := json.Marshal(item.Localizations.EnUs.Microsite)
+		if err != nil {
+			log.Println(err)
 		}
+		microsite = string(byteMicrosite)
 
-		if item.Localizations.EnUs.Microsite.SortWeight == 1 {
+		if item.Localizations.EnUs.SortWeight == 1 {
 			sortWeight = true
 		}
 
-		expirationDate, _ := time.Parse("DD/MM/YYYY", item.Localizations.EnUs.ExpirationDate)
+		var expirationDate time.Time
+		if item.Localizations.EnUs.ExpirationDate != "" {
+			expirationDate, _ = time.Parse("DD/MM/YYYY", item.Localizations.EnUs.ExpirationDate)
+		}
 
 		firmwareOffersDetails := []*FirmwareOfferDetail{{
 			//FirmwareOfferID:         _PLACEHOLDER_STRING_, // Created by Offersvs API
 			OnDeviceCheckoutImg:     &detailsImage,
-			FhdImg:                  &item.Localizations.EnUs.Microsite.FirmwareAssets.FhdImage,
-			FwAssetHdImg:            &item.Localizations.EnUs.Microsite.FirmwareAssets.HdImage,
-			FhdBackgroundImg:        &item.Localizations.EnUs.Microsite.FirmwareAssets.FhdBackgroundImageURL,
-			HdBackgroundImg:         &item.Localizations.EnUs.Microsite.FirmwareAssets.HdBackgroundImageURL,
+			FhdImg:                  &item.Localizations.EnUs.FirmwareAssets.FhdImage,
+			FwAssetHdImg:            &item.Localizations.EnUs.FirmwareAssets.HdImage,
+			FhdBackgroundImg:        &item.Localizations.EnUs.FirmwareAssets.FhdBackgroundImageURL,
+			HdBackgroundImg:         &item.Localizations.EnUs.FirmwareAssets.HdBackgroundImageURL,
 			SlideShow:               &slideshow,
-			MicrositeDescriptions:   &item.Localizations.EnUs.Microsite.DeviceProductDescription,
+			MicrositeDescriptions:   &item.Localizations.EnUs.DeviceProductDescription,
 			MicrositeConfigurations: &item.PageId,
 			MicrositeDisclaimer:     disclaimerDeviceV2,
-			IsCloudSdkMicrosite:     &item.Localizations.EnUs.Microsite.IsCloudSDKEnabled,
+			IsCloudSdkMicrosite:     &item.Localizations.EnUs.IsCloudSDKEnabled,
 			CloudSdkSettings:        &microsite,
 			HasBuyNow:               &item.Localizations.EnUs.Microsite.ButtonsToggle.BuyNow,
 			HasSendMeEmail:          &item.Localizations.EnUs.Microsite.ButtonsToggle.SendMeDetails.SendMeEmail,
@@ -136,18 +137,18 @@ func main() {
 			VanityURL:                 &item.Localizations.EnUs.VanityUrl,
 			OfferDisplayOnTop:         &sortWeight,
 			OfferDisplayOnUpgradePage: &sortWeight,
-			Notification:              &item.Localizations.EnUs.Microsite.Notification,
+			Notification:              &item.Localizations.EnUs.Notification,
 			DetailsBulletFooter:       &item.Localizations.EnUs.BulletFooter1,
 			DetailsBulletFooter1:      &item.Localizations.EnUs.BulletFooter2,
 			DetailsBulletFooter2:      &item.Localizations.EnUs.BulletFooter3,
 			HdImage:                   &hdImage,
 			Descriptions:              &item.Localizations.EnUs.Description,
-			ProdDescDetail:            &item.Localizations.EnUs.Microsite.DeviceProductDescription,
+			ProdDescDetail:            &item.Localizations.EnUs.DeviceProductDescription,
 			WwwOfferDesc:              &item.Localizations.EnUs.WwwOfferDescription,
-			OfferCardNote:             &item.Localizations.EnUs.Microsite.LimitedOfferMsg,
+			OfferCardNote:             &item.Localizations.EnUs.LimitedOfferMsg,
 			MaxQuantity:               &item.Localizations.EnUs.MaxQty,
 			ExpirationDate:            &expirationDate,
-			ShippingMessage:           &item.Localizations.EnUs.Microsite.ShippingMsg,
+			ShippingMessage:           &item.Localizations.EnUs.ShippingMsg,
 			DetailModalImage:          &detailsImage,
 		}}
 
